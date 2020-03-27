@@ -5,17 +5,15 @@ class Ambience {
     document;
     window;
     math;
-    frame;
     ctx;
     width;
     height;
 
-    constructor(doc, win, circle, math, frame, width, height) {
+    constructor(doc, win, circle, math, width, height) {
         this.document = doc;
         this.window = win;
         this.Circle = circle;
         this.math = math;
-        this.frame = frame;
         this.width = width;
         this.height = height;
     }
@@ -102,5 +100,5 @@ class Circle {
     }
 }
 
-const s = new Ambience(document, window, Circle, Math, requestAnimationFrame, innerWidth, innerHeight)
+const s = new Ambience(document, window, Circle, Math, innerWidth, innerHeight)
 s.run()
