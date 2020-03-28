@@ -84,8 +84,17 @@ class Ambience {
 
     }
 
+    resize(){
+        this.canvas.width = this.window.innerWidth;
+        this.canvas.height = this.window.innerHeight;
+        this.circles.forEach(circle => {
+            circle.update(this.window.innerWidth, this.window.innerHeight)
+        })
+    }
+
     appendListener() {
-        this.window.addEventListener('mousemove', this.setMouseCoordinate.bind(this))
+        this.window.addEventListener('mousemove', this.setMouseCoordinate.bind(this));
+        this.window.addEventListener('resize', this.resize.bind(this));
     }
 
     setMouseCoordinate(e) {
@@ -169,6 +178,11 @@ class Circle {
     move() {
         this.calcParams();
         this.draw();
+    }
+
+    update(width, height) {
+        this.width = width;
+        this.height = height;
     }
 }
 
