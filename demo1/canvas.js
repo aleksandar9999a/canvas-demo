@@ -96,7 +96,7 @@ class Ambience {
 
     run() {
         this.createCanvas();
-        this.generateCircles(40);
+        this.generateCircles(100);
         this.appendCanvas();
         this.appendListener();
         this.animate();
@@ -166,14 +166,3 @@ class Circle {
 }
 
 new Ambience(document, window, Circle, Math, innerWidth, innerHeight).run();
-
-
-const mouse = {
-    x: null,
-    y: null
-}
-
-window.addEventListener('mousemove', function (e) {
-    mouse.x = e.x;
-    mouse.y = e.y;
-})
