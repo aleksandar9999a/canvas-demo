@@ -1,15 +1,21 @@
 class Ambience {
+    document;
+    window;
     canvas;
     Circle;
     circles = [];
-    document;
     math;
     ctx;
     width;
     height;
+    mouse = {
+        x: null,
+        y: null
+    }
 
-    constructor(doc, circle, math, width, height) {
+    constructor(doc, win, circle, math, width, height) {
         this.document = doc;
+        this.window = win;
         this.Circle = circle;
         this.math = math;
         this.width = width;
@@ -38,8 +44,20 @@ class Ambience {
     animate() {
         setInterval(() => {
             this.ctx.clearRect(0, 0, this.width, this.height);
-            this.circles.forEach(circle => circle.update());
+            this.circles.forEach(this.circleActions.bind(this))
         }, 1);
+    }
+
+    circleActions(circle) {
+        const c = circle.getCoordinate();
+        if (
+            this.mouse.x - c.x < 50 && this.mouse.x - c.x > -50
+            && this.mouse.y - c.y < 50 && this.mouse.y - c.y > -50
+            ) {
+            return circle.grow();
+        }
+
+        return circle.move();
     }
 
     generateCircles(number) {
@@ -56,14 +74,25 @@ class Ambience {
         this.ctx = this.canvas.getContext('2d');
     }
 
-    append() {
+    appendCanvas() {
         this.document.body.appendChild(this.canvas);
+
+    }
+
+    appendListener() {
+        this.window.addEventListener('mousemove', this.setMouseCoordinate.bind(this))
+    }
+
+    setMouseCoordinate(e) {
+        this.mouse.x = e.x;
+        this.mouse.y = e.y;
     }
 
     run() {
         this.createCanvas();
         this.generateCircles(40);
-        this.append();
+        this.appendCanvas();
+        this.appendListener();
         this.animate();
     }
 }
@@ -88,6 +117,13 @@ class Circle {
         this.ctx.stroke();
     }
 
+    getCoordinate() {
+        return {
+            x: this.x,
+            y: this.y
+        }
+    }
+
     calcParams() {
         if (this.x + this.r > this.width || this.x - this.r < 0) {
             this.dx = -this.dx;
@@ -100,10 +136,26 @@ class Circle {
         this.y += this.dy;
     }
 
-    update() {
+    grow() {
+        this.r++;
+        this.draw();
+    }
+
+    move() {
         this.calcParams();
         this.draw();
     }
 }
 
-new Ambience(document, Circle, Math, innerWidth, innerHeight).run();
+new Ambience(document, window, Circle, Math, innerWidth, innerHeight).run();
+
+
+const mouse = {
+    x: null,
+    y: null
+}
+
+window.addEventListener('mousemove', function (e) {
+    mouse.x = e.x;
+    mouse.y = e.y;
+})
