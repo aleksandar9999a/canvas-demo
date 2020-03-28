@@ -36,8 +36,7 @@ class Ambience {
             y: this.calcSpace(this.height, 30),
             dx: this.calcDParam(),
             dy: this.calcDParam(),
-            r: 30,
-            maxR: 100,
+            r: this.math.random() * 50,
             ctx: this.ctx,
             width: this.width,
             height: this.height,
@@ -49,14 +48,14 @@ class Ambience {
         setInterval(() => {
             this.ctx.clearRect(0, 0, this.width, this.height);
             this.circles.forEach(this.circleActions.bind(this))
-        }, 1);
+        }, 15);
     }
 
     circleActions(circle) {
         const c = circle.getCoordinate();
         if (
-            this.mouse.x - c.x < 50 && this.mouse.x - c.x > -50
-            && this.mouse.y - c.y < 50 && this.mouse.y - c.y > -50
+            this.mouse.x - c.x < 100 && this.mouse.x - c.x > -100
+            && this.mouse.y - c.y < 100 && this.mouse.y - c.y > -100
         ) {
             return circle.grow();
         } else {
@@ -104,13 +103,13 @@ class Ambience {
 }
 
 class Circle {
-    constructor({ ctx, x, y, r, dx, dy, width, height, color, maxR }) {
+    constructor({ ctx, x, y, r, dx, dy, width, height, color }) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.r = r;
         this.minR = r;
-        this.maxR = maxR;
+        this.maxR = r + 50;
         this.dx = dx;
         this.dy = dy;
         this.width = width;
@@ -118,11 +117,19 @@ class Circle {
         this.color = color;
     }
 
+    validation() {
+        if(this.r < 0){
+            console.log(`Problem in radius ${this.r}`);
+            this.r = 1;
+        }
+    }
+
     draw() {
+        this.validation();
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
-        this.ctx.strokeStyle = this.color;
-        this.ctx.stroke();
+        this.ctx.fillStyle = this.color;
+        this.ctx.fill();
     }
 
     getCoordinate() {
