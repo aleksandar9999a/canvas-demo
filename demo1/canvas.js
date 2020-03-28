@@ -6,20 +6,16 @@ class Ambience {
     circles = [];
     math;
     ctx;
-    width;
-    height;
     mouse = {
         x: null,
         y: null
     }
 
-    constructor(doc, win, circle, math, width, height) {
+    constructor(doc, win, circle, math) {
         this.document = doc;
         this.window = win;
         this.Circle = circle;
         this.math = math;
-        this.width = width;
-        this.height = height;
     }
 
     calcSpace(i, r) {
@@ -32,21 +28,21 @@ class Ambience {
 
     generateParams() {
         return {
-            x: this.calcSpace(this.width, 30),
-            y: this.calcSpace(this.height, 30),
+            x: this.calcSpace(this.window.innerWidth, 30),
+            y: this.calcSpace(this.window.innerHeight, 30),
             dx: this.calcDParam(),
             dy: this.calcDParam(),
             r: this.math.random() * 50,
             ctx: this.ctx,
-            width: this.width,
-            height: this.height,
+            width: this.window.innerWidth,
+            height: this.window.innerHeight,
             color: "#" + ((1 << 24) * this.math.random() | 0).toString(16)
         }
     }
 
     animate() {
         setInterval(() => {
-            this.ctx.clearRect(0, 0, this.width, this.height);
+            this.ctx.clearRect(0, 0,  this.window.innerWidth, this.window.innerHeight);
             this.circles.forEach(this.circleActions.bind(this))
         }, 15);
     }
@@ -74,8 +70,8 @@ class Ambience {
 
     createCanvas() {
         this.canvas = this.document.createElement('canvas');
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.canvas.width =  this.window.innerWidth;
+        this.canvas.height = this.window.innerHeight;
         this.ctx = this.canvas.getContext('2d');
     }
 
@@ -183,7 +179,8 @@ class Circle {
     update(width, height) {
         this.width = width;
         this.height = height;
+        this.draw();
     }
 }
 
-new Ambience(document, window, Circle, Math, innerWidth, innerHeight).run();
+new Ambience(document, window, Circle, Math).run();
