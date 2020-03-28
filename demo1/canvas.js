@@ -16,16 +16,20 @@ class Ambience {
         this.height = height;
     }
 
-    calc(i) {
-        return this.math.random() * i;
+    calcSpace(i, r) {
+        return (this.math.random() * (i - r * 2)) + r;
+    }
+
+    calcDParam() {
+        return this.math.random() - 0.5;
     }
 
     generateParams() {
         return {
-            x: this.calc(this.width),
-            y: this.calc(this.height),
-            dx: (this.math.random() - 0.5) * 10,
-            dy: (this.math.random() - 0.5) * 10,
+            x: this.calcSpace(this.width, 30),
+            y: this.calcSpace(this.height, 30),
+            dx: this.calcDParam(),
+            dy: this.calcDParam(),
             r: 30,
             color: "#" + ((1 << 24) * this.math.random() | 0).toString(16)
         }
@@ -102,5 +106,4 @@ class Circle {
     }
 }
 
-const s = new Ambience(document, Circle, Math, innerWidth, innerHeight)
-s.run()
+new Ambience(document, Circle, Math, innerWidth, innerHeight).run();
