@@ -37,6 +37,10 @@ class Ambience {
             dx: this.calcDParam(),
             dy: this.calcDParam(),
             r: 30,
+            maxR: 100,
+            ctx: this.ctx,
+            width: this.width,
+            height: this.height,
             color: "#" + ((1 << 24) * this.math.random() | 0).toString(16)
         }
     }
@@ -53,8 +57,10 @@ class Ambience {
         if (
             this.mouse.x - c.x < 50 && this.mouse.x - c.x > -50
             && this.mouse.y - c.y < 50 && this.mouse.y - c.y > -50
-            ) {
+        ) {
             return circle.grow();
+        } else {
+            circle.depletion();
         }
 
         return circle.move();
@@ -62,8 +68,8 @@ class Ambience {
 
     generateCircles(number) {
         for (let i = 0; i < number; i++) {
-            const p = this.generateParams();
-            this.circles.push(new this.Circle(this.ctx, p.x, p.y, p.r, p.dx, p.dy, this.width, this.height, p.color));
+            const params = this.generateParams();
+            this.circles.push(new this.Circle(params));
         }
     }
 
@@ -98,11 +104,13 @@ class Ambience {
 }
 
 class Circle {
-    constructor(ctx, x, y, r, dx, dy, width, height, color) {
+    constructor({ ctx, x, y, r, dx, dy, width, height, color, maxR }) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.r = r;
+        this.minR = r;
+        this.maxR = maxR;
         this.dx = dx;
         this.dy = dy;
         this.width = width;
@@ -120,7 +128,8 @@ class Circle {
     getCoordinate() {
         return {
             x: this.x,
-            y: this.y
+            y: this.y,
+            r: this.r
         }
     }
 
@@ -137,7 +146,16 @@ class Circle {
     }
 
     grow() {
-        this.r++;
+        if (this.r < this.maxR) {
+            this.r++;
+        }
+        this.draw();
+    }
+
+    depletion() {
+        if (this.r > this.minR) {
+            this.r--;
+        }
         this.draw();
     }
 
